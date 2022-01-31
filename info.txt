@@ -1,0 +1,49 @@
+Info App
+
+La primera pantalla es la de LoginScreen. Para lograr el diseno deseado primero
+creamos un container que ocupe toda la pantalla.
+- Usamos el widget Stack para poner encima del conteiner otro container de altura un 40% del alto a traves de MediaQuery.
+- Para darle color a este Container usamos un gradiente lineal pasandolo como propiedad gradiente al boxDecoration.
+- Luego agregamos con otro stack a este ultimo container, las burbujas y las ubicamos por medio del widget Positioned.
+Usamos el tema light pero usamos el metodo copywith para usar todos los valores por defecto menos el color de fondo del scaffold que lo configuramos a gris
+ThemeData.light().copyWith(scaffoldBackgroundColor: Colors.grey[300]),
+Para crear el formulario usamos el widget Form. Usaremos el key para mantener la referencia.
+Usamos el widget Form y en su child pasamos un column ya que vamos a poner varios widgets. En su children usaremos 2
+textformField (uno para registrar el mail del usuario y otro para la contrasena) Como el metodo decoration del textformField tiene
+muchos parametros ya que podemos agregar (labeltext,hintText,focusBorder,enableBorder,etc) entonces para que sea legible el codigo creamos
+un archivo input_decoration donde definimos la clase InputDecorations y creamos un metodo que retorne un InputDecoration con todo el diseno del textFromField.Como los iconos, labelText,HintText etc
+van a depender del textFromField entonces tenemos que pasarle argumentos a la clase InputDecorations.
+Tambien usamos el widget MaterialButton para crear un boton en el formulario
+Usamos expresion regular para reconocer si el mail esta bien escrito. Si el patron de mail coincide (match) con el mail que escribe el usuario entonces
+proba pasar al siguiente campo.
+Usamos el metodo validator en eel textFormField para validar mail y contrasena
+Sin embargo puede ocurrir que el usuario presione el boton ingresar aun cuando no haya ingresado su mail y/o contrasena
+Para resolver esto haremos uso del key del form para controlar estos eventos.Debemos usar un gestor de estados para mantener el estados
+global del formulario y redibujar los widgets que estan escuchando si ocurre algun cambio.
+
+Despues de hacer el diseno de todas las pantallas es momento de tener un backend para tomar datos y mostrarlos en mi App
+Para ello vamos a Firebase, nos registramos, creamos un nuevo proyecto de prueba, y creamos una base de datos con 4 atributos:
+-name
+-picture
+-price
+-available
+al ser un json lo que hacemos es copiar el url generado vamos a postman pegamos el url y agregamos el nombre del database "products.json"
+damos send y nos genera la respuesta de la peticion, es decir los datos que creamos en firebase.
+Vamos a quicktipe y convertimos el json en una clase. Con la clase creada la copiamos y la pegamos en el archivo de la carpeta models
+llamado product.dart
+
+Estructura del proyecto
+
+-main: aqui definimos nuestra ruta inicial(homeScreen) y las rutas a las que navegaremos (homeScreen,LoginScreen,productsScreen).Tambien definimos el tema para toda la aplicacion
+En la parte mas alta del main creamos una clase AppState donde definimos nuestro provider ProductsService().
+-LoadingScreen: pantalla de inicio con un scaffold con appbar y en el body un CircularChildProgressIndicator para mostrar el loading.
+-HomeScreen: pagina principal formada por un scaffold que en su body tiene un ListView.builder ,tiene un appbar y un floatticgActionButton.
+    ListView.builder: tiene como hijo el widget ProductCard:definido en la carpeta widgets. 
+    -   ProductCard es el widget donde mediante un stack apilamos widget en este caso una imagen del producto,
+    3 textos referidos al precio del producto, nombre e id del producto y la disponibilidad del mismo.El productCard esta envuelto
+    en un GestureDetector permiento seleccionar el producto y navegar a la pantalla productsScreen.
+-productsScreen: pantalla de producto seleccionado en mi homeScreen. En este archivo parte del widget ChangeNotifierProvider para poder instanciar
+la clase ProductFormProvider. El child es el scaffold con un singleChildScrollView de child que nos permite realizar el scroll en la pantalla.Su child
+es un column ya que pusimos una imagen y un formulario (ProductForm).
+
+
